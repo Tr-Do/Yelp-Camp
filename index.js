@@ -17,19 +17,19 @@ const User = require('./models/user');
 
 const MongoDBStore = require('connect-mongo')(session);
 
-
 const userRoutes = require('./routes/users');
 const campgroundRoutes = require('./routes/campgrounds');
 const reviewRoutes = require('./routes/reviews');
 
-// const dbUrl = process.env.DB_URL;
-const dbUrl =  'mongodb://localhost:27017/yelp-camp';
+const dbUrl = process.env.DB_URL || 'mongodb://127.0.0.1:27017/yelp-camp';
 mongoose.connect(dbUrl, {
     useNewUrlParser: true,
-    useCreateIndex: true,
     useUnifiedTopology: true,
-    useFindAndModify: false
-});
+    serverSelectionTimeoutMS: 5000,
+})
+    .then(() => console.log('Connected to MongoDB'))
+    .catch(err => console.log('MongoDB Connection Error:', err));
+;
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
@@ -47,12 +47,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')))
 
-const store = new MongoDBStore ({
-    url: dbUrl,
+
+const store = new MongoDBStore({
+    url: dbUrl,  // Use 'url' instead of 'mongoUrl' for older versions
     secret: 'asecret',
-    touchAfter: 24*3600
+    touchAfter: 24 * 3600
 });
-store.on('error', function(e) {
+
+store.on('error', function (e) {
     console.log('Session store error', e)
 })
 
@@ -79,7 +81,6 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
-    console.log(req.session)
     res.locals.currentUser = req.user;
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
