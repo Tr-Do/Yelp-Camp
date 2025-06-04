@@ -102,16 +102,20 @@
                                 </p>
                                 <% if( currentUser && review.author.equals(currentUser._id)) {%>
                                     <div class="d-flex">
+
                                         <form id="editt"
                                             action="/campgrounds/<%=campground._id%>/reviews/<%=review._id%>?_method=PUT"
                                             method="POST">
-                                            <button class="btn btn-sm btn-warning" onClick="editReview('<%=review.body%>')">Edit</button>
+                                            <button class="btn btn-sm btn-warning" onClick="editReview(<%- JSON.stringify(review.body) %>)">Edit</button>
                                         </form>
-                                        <form id="savee"
+
+                                        <form id="savee" class="d-none"
                                             action="/campgrounds/<%=campground._id%>/reviews/<%=review._id%>?_method=PUT"
                                             method="POST">
+                                            <textarea class="d-none" name="review[body]" id="editedReview"><%=review.body%></textarea>
                                             <button class="btn btn-sm btn-success" onClick="savee()">Save</button>
                                         </form>
+
                                         <form
                                             action="/campgrounds/<%=campground._id%>/reviews/<%=review._id%>?_method=DELETE"
                                             method="POST">
