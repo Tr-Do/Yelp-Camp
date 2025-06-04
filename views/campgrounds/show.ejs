@@ -58,7 +58,7 @@
         <div class="col-6 mt-3">
             <div id='map'></div>
 
-            <% if(currentUser){ %>
+            <% if(!currentUser.review){ %>
                 <h2>Leave a Review</h2>
                 <form action="/campgrounds/<%=campground._id%>/reviews" method="POST" class="mb-3 validated-form"
                     novalidate>
@@ -103,7 +103,7 @@
                                 <% if( currentUser && review.author.equals(currentUser._id)) {%>
                                     <div class="d-flex">
 
-                                        <form id="editt" class="me-2"
+                                        <form id="editt"
                                             action="/campgrounds/<%=campground._id%>/reviews/<%=review._id%>?_method=PUT"
                                             method="POST">
                                             <button class="btn btn-sm btn-warning" onClick="editReview(<%- JSON.stringify(review.body) %>)">Edit</button>
@@ -113,13 +113,13 @@
                                             action="/campgrounds/<%=campground._id%>/reviews/<%=review._id%>?_method=PUT"
                                             method="POST">
                                             <textarea class="d-none" name="review[body]" id="editedReview"><%=review.body%></textarea>
-                                            <button class="btn btn-sm btn-success" onClick="savee()">Save</button>
+                                            <button class="btn btn-sm btn-success mx-5" onClick="savee()">Save</button>
                                         </form>
 
-                                        <form class="me-2"
+                                        <form
                                             action="/campgrounds/<%=campground._id%>/reviews/<%=review._id%>?_method=DELETE"
                                             method="POST">
-                                            <button class="btn btn-sm btn-danger">Delete</button>
+                                            <button class="btn btn-sm btn-danger mx-3">Delete</button>
                                         </form>
                                     </div>
 
